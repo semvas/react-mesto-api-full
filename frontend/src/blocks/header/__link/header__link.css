@@ -1,0 +1,12 @@
+.header__link {
+  padding-left: 24px;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.22;
+  text-rendering: optimizeLegibility;
+}
+
+/* @media screen and (max-width: 425px) {
+  .header__link {
+  }
+} */
