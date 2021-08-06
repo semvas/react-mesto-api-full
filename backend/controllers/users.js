@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const User = require('../models/user');
 
 const NotFoundError = require('../errors/NotFoundError');
@@ -34,7 +36,7 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'MongoError' && err.code === 11000) {
         throw new ConflictError('Указанный адрес почты уже используется');
@@ -59,7 +61,7 @@ const updateUser = (req, res, next) => {
     },
   )
     .orFail(new NotFoundError('Пользователь по указанному id не найден'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Передан некорректный id');
@@ -84,7 +86,7 @@ const updateAvatar = (req, res, next) => {
     },
   )
     .orFail(new NotFoundError('Пользователь по указанному id не найден'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Передан некорректный id');
@@ -104,15 +106,11 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        'secret-key',
+        NODE_ENV === 'production' ? JWT_SECRET : 'secret-key',
         { expiresIn: '7d' },
       );
 
-      res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-      })
-        .send({ token });
+      res.send({ token });
     })
     .catch(next);
 };

@@ -33,34 +33,18 @@ function App() {
   const[email, setEmail] = useState('');
   const[loggedIn, setLoggedIn] = useState(false);
   const[isSuccess, setIsSuccess] = useState(false);
+  const [token, setToken] = useState('');
 
   const history = useHistory();
-
-  useEffect(() => {
-    handleTokenCheck();
-  }, []);
-
-  useEffect(() =>{
-    Promise.all([
-      api.getUserInfo(),
-      api.getInitialCards()
-    ])
-    .then(([userData, initialCards]) => {
-      setCurrentUser(userData);
-      setCards(initialCards);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }, []);
 
   function handleTokenCheck() {
     if (localStorage.getItem('jwt')) {
       const jwt = localStorage.getItem('jwt');
       if (jwt) {
+        setToken(jwt);
         auth.checkToken(jwt).then(res => {
           if (res) {
-            setEmail(res.data.email);
+            setEmail(res.email);
             setLoggedIn(true);
             history.push("/");
           }
@@ -71,6 +55,24 @@ function App() {
       }
     }
   }
+
+  useEffect(() => {
+    handleTokenCheck();
+  }, []);
+
+  useEffect(() => {
+    Promise.all([
+      api.getUserInfo(token),
+      api.getInitialCards(token)
+    ])
+    .then(([userData, initialCards]) => {
+      setCurrentUser(userData);
+      setCards(initialCards);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }, [token]);
 
   function handleRegister(email, password) {
     auth.register(email, password).then(res => {
@@ -132,7 +134,8 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
+    
 
     api.toggleLike(card._id, isLiked)
     .then(newCard => {
@@ -156,7 +159,7 @@ function App() {
   function handleAddPlaceSubmit(card) {
     api.addCard(card)
     .then(newCard => {
-      setCards([newCard, ...cards]);
+      setCards([...cards, newCard]);
       closeAllPopups();
     })
     .catch(err => {

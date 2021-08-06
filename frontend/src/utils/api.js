@@ -1,7 +1,6 @@
 export default class Api {
-  constructor({ baseUrl, token }) {
+  constructor({ baseUrl }) {
     this._url = baseUrl;
-    this._token = token;
   }
 
   _handleResponse(res) {
@@ -11,10 +10,11 @@ export default class Api {
     return Promise.reject(`Ошибка ${res.status}`);
   }
 
-  getUserInfo() {
+  getUserInfo(token) {
     return fetch(`${this._url}/users/me`, {
       headers: {
-        authorization: this._token
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
       }
     })
     .then(this._handleResponse)
@@ -24,7 +24,7 @@ export default class Api {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -39,7 +39,7 @@ export default class Api {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -49,10 +49,11 @@ export default class Api {
     .then(this._handleResponse)
   }
 
-  getInitialCards() {
+  getInitialCards(token) {
     return fetch(`${this._url}/cards`, {
       headers: {
-        authorization: this._token
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
       }
     })
     .then(this._handleResponse)
@@ -62,7 +63,7 @@ export default class Api {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -77,17 +78,19 @@ export default class Api {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: 'DELETE',
       headers: {
-        authorization: this._token
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
       }
     })
     .then(this._handleResponse)
   }
   
   toggleLike(cardId, status) {
-    return fetch(`${this._url}/cards/likes/${cardId}`, {
+    return fetch(`${this._url}/cards/${cardId}/likes/`, {
       method: status ? 'DELETE' : 'PUT',
       headers: {
-        authorization: this._token
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
       }
     })
     .then(this._handleResponse)
@@ -95,6 +98,5 @@ export default class Api {
 }
 
 export const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-23',
-  token: 'cadf30a7-bb91-4b36-8346-85b440530081'
+  baseUrl: 'http://localhost:3001'
 });
