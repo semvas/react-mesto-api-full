@@ -33,7 +33,7 @@ function App() {
   const[email, setEmail] = useState('');
   const[loggedIn, setLoggedIn] = useState(false);
   const[isSuccess, setIsSuccess] = useState(false);
-  const [token, setToken] = useState('');
+  const[token, setToken] = useState('');
 
   const history = useHistory();
 
@@ -79,7 +79,7 @@ function App() {
       if (res) {
         setIsSuccess(true);
         setIsInfoPopupOpen(true);
-        history.push("/sign-in");
+        history.push("/signin");
       }
     })
     .catch(err => {
@@ -197,10 +197,10 @@ function App() {
             onSignOut={handleSignOut}
           />
           <Switch>
-            <Route path="/sign-in">
+            <Route path="/signin">
               <Login onLogin={handleAuthorize} />
             </Route>
-            <Route path="/sign-up">
+            <Route path="/signup">
               <Register onRegister={handleRegister} />
             </Route>
             <ProtectedRoute

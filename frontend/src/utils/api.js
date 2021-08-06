@@ -98,5 +98,5 @@ export default class Api {
 }
 
 export const api = new Api({
-  baseUrl: 'http://localhost:3001'
+  baseUrl: 'http://api.mesto.deftdev.nomoredomains.monster'
 });
