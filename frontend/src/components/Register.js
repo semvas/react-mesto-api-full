@@ -48,7 +48,7 @@ function Register(props) {
           required
         />
         <button type="submit" className="auth__save-btn btn">Зарегистрироваться</button>
-        <p className="auth__text">Уже зарегистрированы? <Link className="auth__link link" to="/sign-in">Войти</Link></p>
+        <p className="auth__text">Уже зарегистрированы? <Link className="auth__link link" to="/signin">Войти</Link></p>
       </form>
     </div>
   )

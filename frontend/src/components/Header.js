@@ -11,13 +11,13 @@ function Header(props) {
         {props.loggedIn ? (
           <>
             <p className="header__email">{props.email}</p>
-            <Link className="header__link header__link_logout" to="/sign-in" onClick={props.onSignOut}>Выйти</Link>
+            <Link className="header__link header__link_logout" to="/signin" onClick={props.onSignOut}>Выйти</Link>
           </>
         ) : (
           <>
-            {location.pathname === "/sign-in" ?
-              <Link className="header__link link" to="/sign-up">Регистрация</Link> :
-              <Link className="header__link link" to="/sign-in">Войти</Link>
+            {location.pathname === "/signin" ?
+              <Link className="header__link link" to="/signup">Регистрация</Link> :
+              <Link className="header__link link" to="/signin">Войти</Link>
             }
           </>
         )}
