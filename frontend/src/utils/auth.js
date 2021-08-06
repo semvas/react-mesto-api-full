@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://api.mesto.deftdev.nomoredomains.monster';
+export const BASE_URL = 'https://api.mesto.deftdev.nomoredomains.monster';
 
 const handleResponse = res => {
   if (res.ok) {
